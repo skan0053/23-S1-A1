@@ -11,9 +11,9 @@ from data_structures.referential_array import ArrayR
 LAYERS: ArrayR[Layer] = ArrayR(20)
 cur_layer_index = 0
 
+
 @dataclass
 class Layer:
-
     index: int
     apply: function
     name: str = field(init=False)
@@ -24,6 +24,7 @@ class Layer:
             self.bg = self.apply.__bg__
         self.name = self.apply.__name__
 
+
 class background(object):
     """Simple decorator to add a __bg__ property to a layer
 
@@ -31,10 +32,11 @@ class background(object):
             @background(200, 0, 120)
             def my_special_layer(...):
     """
+
     def __init__(self, r, g, b):
         self.val = (r, g, b)
 
-    def __call__(self, layer: function|Layer):
+    def __call__(self, layer: function | Layer):
         # This could be applied before or after registration
         if isinstance(layer, Layer):
             func = layer.apply
@@ -42,6 +44,7 @@ class background(object):
             func = layer
         func.__bg__ = self.val
         return layer
+
 
 def register(func):
     """
@@ -56,8 +59,9 @@ def register(func):
     global cur_layer_index
     LAYERS[cur_layer_index] = Layer(cur_layer_index, func)
     cur_layer_index += 1
-    return LAYERS[cur_layer_index-1]
+    return LAYERS[cur_layer_index - 1]
+
 
 def get_layers():
-    import layers # Force all registrations to occur.
+    import layers  # Force all registrations to occur.
     return LAYERS
